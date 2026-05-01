@@ -1,0 +1,26 @@
+package domain
+
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
+
+type KafkaConnection struct {
+	ID        uuid.UUID `json:"id"`
+	UserID    uuid.UUID `json:"user_id"`
+	User      User      `json:"user"`
+	Name      string    `json:"name"`
+	Brokers   string    `json:"brokers"`
+	GroupID   string    `json:"group_id"`
+	Active    bool      `json:"active"`
+	CreatedAt time.Time `json:"created_at"`
+}
+
+type CreateKafkaConnection struct {
+	UserID  uuid.UUID `json:"user_id"`
+	User    User      `json:"user"`
+	Name    string    `json:"name"`
+	Brokers string    `json:"brokers"`
+	GroupID string    `json:"group_id"`
+}
