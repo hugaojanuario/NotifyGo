@@ -28,5 +28,5 @@ type ChannelConfig struct {
 	WebhookSecret   *string     `json:"webhook_secret"`
 	SlackChannel    *string     `json:"slack_channel"`
 	Active          bool        `json:"active"`
-	CreatedAt       time.Time   `json:""created_at`
+	CreatedAt       time.Time   `json:"created_at"`
 }
