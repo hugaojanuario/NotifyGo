@@ -9,7 +9,6 @@ import (
 type Route struct {
 	ID                uuid.UUID `json:"id"`
 	UserID            uuid.UUID `json:"user_id"`
-	User              User      `json:"user"`
 	KafkaConnectionID uuid.UUID `json:"kafka_connection_id"`
 	Name              string    `json:"name"`
 	Topic             string    `json:"topic"`
@@ -18,8 +17,6 @@ type Route struct {
 }
 
 type CreateRoute struct {
-	UserID            uuid.UUID `json:"user_id"`
-	User              User      `json:"user"`
 	KafkaConnectionID uuid.UUID `json:"kafka_connection_id"`
 	Name              string    `json:"name"`
 	Topic             string    `json:"topic"`

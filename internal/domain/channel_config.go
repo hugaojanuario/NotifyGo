@@ -14,10 +14,23 @@ type ChannelConfig struct {
 	ToFixed         *string     `json:"to_fixed"`
 	Subject         *string     `json:"subject"`
 	TemplateID      *uuid.UUID  `json:"template_id"`
-	MessageTemplate *string     `json:"mensage_template"`
+	MessageTemplate *string     `json:"message_template"`
 	WebhookURL      *string     `json:"webhook_url"`
 	WebhookSecret   *string     `json:"webhook_secret"`
 	SlackChannel    *string     `json:"slack_channel"`
 	Active          bool        `json:"active"`
 	CreatedAt       time.Time   `json:"created_at"`
+}
+
+type CreateChannelConfig struct {
+	ChannelType     ChannelType `json:"channel_type"`
+	ToField         *string     `json:"to_field"`
+	ToFixed         *string     `json:"to_fixed"`
+	Subject         *string     `json:"subject"`
+	TemplateID      *uuid.UUID  `json:"template_id"`
+	MessageTemplate *string     `json:"message_template"`
+	WebhookURL      *string     `json:"webhook_url"`
+	WebhookSecret   *string     `json:"webhook_secret"`
+	SlackChannel    *string     `json:"slack_channel"`
+	Active          bool        `json:"active"`
 }

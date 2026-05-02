@@ -3,8 +3,8 @@ package domain
 type ChannelType string
 
 const (
-	Email   ChannelType = "EMAIL"
-	Slack   ChannelType = "SLACK"
-	Webhook ChannelType = "WEBHOOK"
-	Sms     ChannelType = "SMS"
+	ChannelEmail   ChannelType = "EMAIL"
+	ChannelSlack   ChannelType = "SLACK"
+	ChannelWebhook ChannelType = "WEBHOOK"
+	ChannelSMS     ChannelType = "SMS"
 )

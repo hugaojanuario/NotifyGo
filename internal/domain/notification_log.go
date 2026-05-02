@@ -10,8 +10,8 @@ type NotificationStatus string
 
 const (
 	Success  NotificationStatus = "SUCCESS"
-	Falied   NotificationStatus = "FAILED"
-	Retrying NotificationStatus = "Retrying"
+	Failed   NotificationStatus = "FAILED"
+	Retrying NotificationStatus = "RETRYING"
 )
 
 type NotificationLog struct {
