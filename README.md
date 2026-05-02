@@ -1,6 +1,6 @@
 
 <div align="center">
-  <img src="./docs/banner/notifygo-banner.png" alt="ward - API Gateway" width="900"/>
+  <img src="./docs/banner/images.png" alt="ward - API Gateway" width="900"/>
 
 
   <h1>NotifyGo</h1>
