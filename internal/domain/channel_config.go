@@ -6,15 +6,6 @@ import (
 	"github.com/google/uuid"
 )
 
-type ChannelType string
-
-const (
-	Email   ChannelType = "EMAIL"
-	Slack   ChannelType = "SLACK"
-	Webhook ChannelType = "WEBHOOK"
-	Sms     ChannelType = "SMS"
-)
-
 type ChannelConfig struct {
 	ID              uuid.UUID   `json:"id"`
 	RouteID         uuid.UUID   `json:"route_id"`
