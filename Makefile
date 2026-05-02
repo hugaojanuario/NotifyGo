@@ -21,3 +21,6 @@ down:
 
 down-clear:
 	docker-compose down -v
+
+migrate:
+	migrate -path db/migrations -database "postgres://admin:123456@localhost:5432/notifygo?sslmode=disable" up
