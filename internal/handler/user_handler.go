@@ -19,7 +19,7 @@ func NewHandler(s *service.UserService) *Handler {
 func (h *Handler) CreateUser(c *gin.Context) {
 	var req domain.CreateUserRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "corpo de req invalido"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "body invalid"})
 		return
 	}
 

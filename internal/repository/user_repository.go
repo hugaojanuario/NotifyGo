@@ -9,6 +9,14 @@ import (
 	"github.com/hugaojanuario/NotifyGo/internal/domain"
 )
 
+type UserRepositoryMethods interface {
+	CreateUser(ctx context.Context, req domain.CreateUserRequest, passwordHash string) (*domain.UserResponse, error)
+	GetAll(ctx context.Context) ([]domain.UserResponse, error)
+	GetByID(ctx context.Context, id uuid.UUID) (*domain.UserResponse, error)
+	Update(ctx context.Context, id uuid.UUID, req domain.UpdateUserRequest) (*domain.UserResponse, error)
+	SoftDelete(ctx context.Context, id uuid.UUID) error
+}
+
 type UserRepository struct {
 	db *sql.DB
 }
@@ -26,7 +34,7 @@ func (r *UserRepository) CreateUser(ctx context.Context, req domain.CreateUserRe
 	err := r.db.QueryRowContext(ctx, query, req.Name, req.Email, passwordHash).
 		Scan(&user.ID, &user.Name, &user.Email, &user.Active, &user.CreatedAt, &user.UpdatedAt)
 	if err != nil {
-		return nil, fmt.Errorf("erro ao criar o novo usuario: %w", err)
+		return nil, fmt.Errorf("repository - error create new user: %w", err)
 	}
 
 	return user, nil
@@ -40,7 +48,7 @@ func (r *UserRepository) GetAll(ctx context.Context) ([]domain.UserResponse, err
 
 	rows, err := r.db.QueryContext(ctx, query)
 	if err != nil {
-		return nil, fmt.Errorf("error this listing the users: %w", err)
+		return nil, fmt.Errorf("repository - error this listing the users: %w", err)
 	}
 	defer rows.Close()
 
@@ -51,7 +59,7 @@ func (r *UserRepository) GetAll(ctx context.Context) ([]domain.UserResponse, err
 
 		err := rows.Scan(&user.ID, &user.Name, &user.Email, &user.Active, &user.CreatedAt, &user.UpdatedAt)
 		if err != nil {
-			return nil, fmt.Errorf("repository: error when listing alerts: %w", err)
+			return nil, fmt.Errorf("repository - error when listing alerts: %w", err)
 		}
 
 		users = append(users, user)
@@ -73,7 +81,7 @@ func (r *UserRepository) GetByID(ctx context.Context, id uuid.UUID) (*domain.Use
 		return nil, nil
 	}
 	if err != nil {
-		return nil, fmt.Errorf("error when listing the alert by ID: %w", err)
+		return nil, fmt.Errorf("repository - error when listing the alert by ID: %w", err)
 	}
 
 	return user, nil
@@ -93,18 +101,18 @@ func (r *UserRepository) Update(ctx context.Context, id uuid.UUID, req domain.Up
 		return nil, nil
 	}
 	if err != nil {
-		return nil, fmt.Errorf("repository: error when updating user: %w", err)
+		return nil, fmt.Errorf("repository - repository: error when updating user: %w", err)
 	}
 
 	return user, nil
 }
 
 func (r *UserRepository) SoftDelete(ctx context.Context, id uuid.UUID) error {
-	query := `DELETE FROM users WHERE id = $1`
+	query := `UPDATE users SET active = true WHERE id = $1`
 
 	result, err := r.db.ExecContext(ctx, query, id)
 	if err != nil {
-		return fmt.Errorf("erro ao deletar usuário: %w", err)
+		return fmt.Errorf("repository - error soft delete user: %w", err)
 	}
 
 	rowsAffected, _ := result.RowsAffected()
