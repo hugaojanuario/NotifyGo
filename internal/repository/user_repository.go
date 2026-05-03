@@ -26,7 +26,7 @@ func NewUserRepository(db *sql.DB) *UserRepository {
 }
 
 func (r *UserRepository) CreateUser(ctx context.Context, req domain.CreateUserRequest, passwordHash string) (*domain.UserResponse, error) {
-	query := `INSERT INTO users (name, email, password)
+	query := `INSERT INTO users (name, email, password_hash)
 			VALUES ($1, $2, $3)
 			RETURNING id, name, email, active, created_at, updated_at`
 
@@ -76,7 +76,7 @@ func (r *UserRepository) GetByID(ctx context.Context, id uuid.UUID) (*domain.Use
 	user := &domain.UserResponse{}
 
 	err := r.db.QueryRowContext(ctx, query, id).
-		Scan(&user.ID)
+		Scan(&user.ID, &user.Name, &user.Email, &user.Active, &user.CreatedAt, &user.UpdatedAt)
 	if err == sql.ErrNoRows {
 		return nil, nil
 	}
@@ -89,7 +89,7 @@ func (r *UserRepository) GetByID(ctx context.Context, id uuid.UUID) (*domain.Use
 
 func (r *UserRepository) Update(ctx context.Context, id uuid.UUID, req domain.UpdateUserRequest) (*domain.UserResponse, error) {
 	query := `UPDATE users
-			SET name = $1, email = $2, password = $3
+			SET name = $1, email = $2, password_hash = $3
 			WHERE id = $4
 			RETURNING id, name, email, active, created_at, updated_at`
 
