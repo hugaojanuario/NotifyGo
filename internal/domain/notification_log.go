@@ -9,9 +9,9 @@ import (
 type NotificationStatus string
 
 const (
-	Success  NotificationStatus = "SUCCESS"
-	Failed   NotificationStatus = "FAILED"
-	Retrying NotificationStatus = "RETRYING"
+	StatusSuccess  NotificationStatus = "SUCCESS"
+	StatusFailed   NotificationStatus = "FAILED"
+	StatusRetrying NotificationStatus = "RETRYING"
 )
 
 type NotificationLog struct {
