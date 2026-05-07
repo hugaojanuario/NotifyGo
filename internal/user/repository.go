@@ -1,4 +1,4 @@
-package repository
+package user
 
 import (
 	"context"
@@ -6,14 +6,13 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
-	"github.com/hugaojanuario/NotifyGo/internal/domain"
 )
 
 type UserRepositoryMethods interface {
-	CreateUser(ctx context.Context, req domain.CreateUserRequest, passwordHash string) (*domain.UserResponse, error)
-	GetAll(ctx context.Context) ([]domain.UserResponse, error)
-	GetByID(ctx context.Context, id uuid.UUID) (*domain.UserResponse, error)
-	Update(ctx context.Context, id uuid.UUID, req domain.UpdateUserRequest) (*domain.UserResponse, error)
+	CreateUser(ctx context.Context, req CreateUserRequest, passwordHash string) (*UserResponse, error)
+	GetAll(ctx context.Context) ([]UserResponse, error)
+	GetByID(ctx context.Context, id uuid.UUID) (*UserResponse, error)
+	Update(ctx context.Context, id uuid.UUID, req UpdateUserRequest) (*UserResponse, error)
 	SoftDelete(ctx context.Context, id uuid.UUID) error
 }
 
@@ -25,12 +24,12 @@ func NewUserRepository(db *sql.DB) *UserRepository {
 	return &UserRepository{db: db}
 }
 
-func (r *UserRepository) CreateUser(ctx context.Context, req domain.CreateUserRequest, passwordHash string) (*domain.UserResponse, error) {
+func (r *UserRepository) CreateUser(ctx context.Context, req CreateUserRequest, passwordHash string) (*UserResponse, error) {
 	query := `INSERT INTO users (name, email, password_hash)
 			VALUES ($1, $2, $3)
 			RETURNING id, name, email, active, created_at, updated_at`
 
-	user := &domain.UserResponse{}
+	user := &UserResponse{}
 	err := r.db.QueryRowContext(ctx, query, req.Name, req.Email, passwordHash).
 		Scan(&user.ID, &user.Name, &user.Email, &user.Active, &user.CreatedAt, &user.UpdatedAt)
 	if err != nil {
@@ -40,7 +39,7 @@ func (r *UserRepository) CreateUser(ctx context.Context, req domain.CreateUserRe
 	return user, nil
 }
 
-func (r *UserRepository) GetAll(ctx context.Context) ([]domain.UserResponse, error) {
+func (r *UserRepository) GetAll(ctx context.Context) ([]UserResponse, error) {
 	query := `SELECT id, name, email, active, created_at, updated_at
 			FROM users
 			WHERE active = true
@@ -52,10 +51,10 @@ func (r *UserRepository) GetAll(ctx context.Context) ([]domain.UserResponse, err
 	}
 	defer rows.Close()
 
-	var users []domain.UserResponse
+	var users []UserResponse
 
 	for rows.Next() {
-		var user domain.UserResponse
+		var user UserResponse
 
 		err := rows.Scan(&user.ID, &user.Name, &user.Email, &user.Active, &user.CreatedAt, &user.UpdatedAt)
 		if err != nil {
@@ -68,12 +67,12 @@ func (r *UserRepository) GetAll(ctx context.Context) ([]domain.UserResponse, err
 	return users, nil
 }
 
-func (r *UserRepository) GetByID(ctx context.Context, id uuid.UUID) (*domain.UserResponse, error) {
+func (r *UserRepository) GetByID(ctx context.Context, id uuid.UUID) (*UserResponse, error) {
 	query := `SELECT id, name, email, active, created_at, updated_at
 			FROM users
 			WHERE ID = $1`
 
-	user := &domain.UserResponse{}
+	user := &UserResponse{}
 
 	err := r.db.QueryRowContext(ctx, query, id).
 		Scan(&user.ID, &user.Name, &user.Email, &user.Active, &user.CreatedAt, &user.UpdatedAt)
@@ -87,13 +86,13 @@ func (r *UserRepository) GetByID(ctx context.Context, id uuid.UUID) (*domain.Use
 	return user, nil
 }
 
-func (r *UserRepository) Update(ctx context.Context, id uuid.UUID, req domain.UpdateUserRequest) (*domain.UserResponse, error) {
+func (r *UserRepository) Update(ctx context.Context, id uuid.UUID, req UpdateUserRequest) (*UserResponse, error) {
 	query := `UPDATE users
 			SET name = $1, email = $2, password_hash = $3
 			WHERE id = $4
 			RETURNING id, name, email, active, created_at, updated_at`
 
-	user := &domain.UserResponse{}
+	user := &UserResponse{}
 
 	err := r.db.QueryRowContext(ctx, query, req.Name, req.Email, req.Password, id).
 		Scan(&user.ID, &user.Name, &user.Email, &user.Active, &user.CreatedAt, &user.UpdatedAt)

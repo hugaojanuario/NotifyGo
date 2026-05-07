@@ -1,24 +1,22 @@
-package handler
+package user
 
 import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"github.com/hugaojanuario/NotifyGo/internal/domain"
-	"github.com/hugaojanuario/NotifyGo/internal/service"
 )
 
 type UserHandler struct {
-	s *service.UserService
+	s *UserService
 }
 
-func NewUserHandler(s *service.UserService) *UserHandler {
+func NewUserHandler(s *UserService) *UserHandler {
 	return &UserHandler{s: s}
 }
 
 func (h *UserHandler) CreateUser(c *gin.Context) {
-	var req domain.CreateUserRequest
+	var req CreateUserRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "body invalid"})
 		return
@@ -65,7 +63,7 @@ func (h *UserHandler) Update(c *gin.Context) {
 		return
 	}
 
-	var req domain.UpdateUserRequest
+	var req UpdateUserRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

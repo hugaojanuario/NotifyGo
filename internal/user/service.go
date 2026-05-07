@@ -1,4 +1,4 @@
-package service
+package user
 
 import (
 	"context"
@@ -6,20 +6,18 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
-	"github.com/hugaojanuario/NotifyGo/internal/domain"
-	"github.com/hugaojanuario/NotifyGo/internal/repository"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type UserService struct {
-	r repository.UserRepositoryMethods
+	r UserRepositoryMethods
 }
 
-func NewUserService(r repository.UserRepositoryMethods) *UserService {
+func NewUserService(r UserRepositoryMethods) *UserService {
 	return &UserService{r: r}
 }
 
-func (s *UserService) CreateUser(ctx context.Context, req domain.CreateUserRequest) (*domain.UserResponse, error) {
+func (s *UserService) CreateUser(ctx context.Context, req CreateUserRequest) (*UserResponse, error) {
 	passwordHash, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return nil, fmt.Errorf("service - error generating password hash: %w", err)
@@ -33,11 +31,11 @@ func (s *UserService) CreateUser(ctx context.Context, req domain.CreateUserReque
 	return user, nil
 }
 
-func (s *UserService) GetAll(ctx context.Context) ([]domain.UserResponse, error) {
+func (s *UserService) GetAll(ctx context.Context) ([]UserResponse, error) {
 	return s.r.GetAll(ctx)
 }
 
-func (s *UserService) GetByID(ctx context.Context, id uuid.UUID) (*domain.UserResponse, error) {
+func (s *UserService) GetByID(ctx context.Context, id uuid.UUID) (*UserResponse, error) {
 	user, err := s.r.GetByID(ctx, id)
 	if err != nil {
 		return nil, fmt.Errorf("service - error when listing the alert by ID: %w", err)
@@ -50,7 +48,7 @@ func (s *UserService) GetByID(ctx context.Context, id uuid.UUID) (*domain.UserRe
 	return user, nil
 }
 
-func (s *UserService) Update(ctx context.Context, id uuid.UUID, req domain.UpdateUserRequest) (*domain.UserResponse, error) {
+func (s *UserService) Update(ctx context.Context, id uuid.UUID, req UpdateUserRequest) (*UserResponse, error) {
 	_, err := s.r.GetByID(ctx, id)
 	if err != nil {
 		return nil, fmt.Errorf("service - database error when fetching user: %w", err)

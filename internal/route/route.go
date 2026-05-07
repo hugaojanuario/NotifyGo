@@ -1,4 +1,4 @@
-package domain
+package route
 
 import (
 	"time"
@@ -17,6 +17,12 @@ type Route struct {
 }
 
 type CreateRoute struct {
+	KafkaConnectionID uuid.UUID `json:"kafka_connection_id"`
+	Name              string    `json:"name"`
+	Topic             string    `json:"topic"`
+}
+
+type UpdateRoute struct {
 	KafkaConnectionID uuid.UUID `json:"kafka_connection_id"`
 	Name              string    `json:"name"`
 	Topic             string    `json:"topic"`
