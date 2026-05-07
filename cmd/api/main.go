@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/hugaojanuario/NotifyGo/internal/router"
+	"github.com/hugaojanuario/NotifyGo/internal/server"
 	"github.com/hugaojanuario/NotifyGo/internal/user"
 	"github.com/hugaojanuario/NotifyGo/pkg/config"
 	"github.com/hugaojanuario/NotifyGo/pkg/database"
@@ -22,6 +22,6 @@ func main() {
 	s := user.NewUserService(r)
 	h := user.NewUserHandler(s)
 
-	router := router.SetupRouter(h)
+	router := server.SetupRouter(h)
 	router.Run(":9292")
 }

@@ -9,7 +9,7 @@ import (
 )
 
 type RouteMethods interface {
-	Create(ctx context.Context, request CreateRoute) (*Route, error)
+	CreateRoute(ctx context.Context, request CreateRoute) (*Route, error)
 	GetAll(ctx context.Context) ([]Route, error)
 	GetByID(ctx context.Context, id uuid.UUID) (*Route, error)
 	Update(ctx context.Context, id uuid.UUID, request UpdateRoute) (*Route, error)
@@ -24,7 +24,7 @@ func NewRouteRepository(db *sql.DB) RouteRepository {
 	return RouteRepository{db: db}
 }
 
-func (r *RouteRepository) Create(ctx context.Context, request CreateRoute) (*Route, error) {
+func (r *RouteRepository) CreateRouter(ctx context.Context, request CreateRoute) (*Route, error) {
 	query := `INSERT INTO routes (kafka_connection_id, name, topic)
 			VALUES ($1, $2, $3)
 			RETURNING id, user_id, kafka_connection_id, name, topic, active, created_at`
@@ -109,7 +109,7 @@ func (r *RouteRepository) SoftDelete(ctx context.Context, id uuid.UUID) error {
 
 	rowsAffected, _ := result.RowsAffected()
 	if rowsAffected == 0 {
-		return sql.ErrNoRows // não encontrado
+		return sql.ErrNoRows
 	}
 
 	return nil
